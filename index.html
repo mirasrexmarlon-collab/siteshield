@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SiteShield — Website blocking with a passcode, for Windows</title>
+<meta name="description" content="SiteShield blocks websites on Windows in every browser, from the moment the PC starts. Blocked sites open only with your passcode. Private, offline, free during Early Access.">
+<link rel="icon" href="favicon.png">
+<style>
+  :root {
+    --navy: #0b1d3f;
+    --navy-2: #13306a;
+    --blue: #1f6feb;
+    --blue-soft: #e8f0fe;
+    --green: #0f9d68;
+    --green-soft: #e3f6ee;
+    --ink: #172033;
+    --muted: #5b6577;
+    --line: #e3e7ee;
+    --bg: #ffffff;
+    --bg-alt: #f5f7fb;
+    --radius: 14px;
+    --max: 1080px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font: 16px/1.6 "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; color: var(--ink); background: var(--bg); }
+  a { color: var(--blue); }
+  img { max-width: 100%; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+
+  /* Header */
+  header { position: sticky; top: 0; z-index: 10; background: rgba(11, 29, 63, 0.96); backdrop-filter: blur(6px); }
+  .nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font-weight: 700; font-size: 18px; }
+  .brand img { width: 30px; height: 30px; }
+  .nav ul { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
+  .nav ul a { color: #cfd9ee; text-decoration: none; font-size: 15px; }
+  .nav ul a:hover { color: #fff; }
+
+  /* Hero */
+  .hero { background: linear-gradient(160deg, var(--navy) 0%, var(--navy-2) 100%); color: #fff; padding: 64px 0 72px; }
+  .hero-grid { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 40px; align-items: center; }
+  .pill { display: inline-block; background: rgba(15, 157, 104, 0.18); color: #7be3b8; border: 1px solid rgba(123, 227, 184, 0.35); padding: 4px 12px; border-radius: 999px; font-size: 14px; font-weight: 600; }
+  .hero h1 { font-size: clamp(30px, 4.6vw, 46px); line-height: 1.15; margin: 16px 0 14px; }
+  .hero p.lead { font-size: 18px; color: #cfd9ee; margin: 0 0 26px; max-width: 34em; }
+  .hero-logo { justify-self: center; width: min(240px, 60vw); filter: drop-shadow(0 18px 40px rgba(0,0,0,.35)); }
+  .buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn { display: inline-block; padding: 13px 22px; border-radius: 10px; font-weight: 600; text-decoration: none; font-size: 16px; }
+  .btn-primary { background: var(--blue); color: #fff; }
+  .btn-primary:hover { background: #1a5fd0; }
+  .btn-ghost { border: 1px solid rgba(255,255,255,.35); color: #fff; }
+  .btn-ghost:hover { background: rgba(255,255,255,.08); }
+  .small { font-size: 14px; color: #a9b8d6; margin-top: 14px; }
+
+  /* Sections */
+  section { padding: 64px 0; scroll-margin-top: 60px; } /* menu links land below the sticky header */
+  section.alt { background: var(--bg-alt); }
+  h2 { font-size: clamp(24px, 3.2vw, 32px); margin: 0 0 8px; }
+  .sub { color: var(--muted); margin: 0 0 32px; max-width: 42em; }
+
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+  .card h3 { margin: 0 0 6px; font-size: 18px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .icon { width: 38px; height: 38px; border-radius: 10px; background: var(--blue-soft); color: var(--blue); display: grid; place-items: center; font-weight: 700; margin-bottom: 12px; }
+
+  .steps { counter-reset: step; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .step { position: relative; padding: 22px 22px 22px 66px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); }
+  .step::before { counter-increment: step; content: counter(step); position: absolute; left: 20px; top: 20px; width: 32px; height: 32px; border-radius: 50%; background: var(--navy); color: #fff; display: grid; place-items: center; font-weight: 700; }
+  .step h3 { margin: 0 0 4px; font-size: 17px; }
+  .step p { margin: 0; color: var(--muted); font-size: 15px; }
+
+  /* Plans */
+  .notice { background: var(--green-soft); border: 1px solid #b9e8d4; color: #0b5e40; border-radius: var(--radius); padding: 16px 20px; margin-bottom: 26px; font-weight: 600; }
+  .plans { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; align-items: stretch; }
+  .plan { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; display: flex; flex-direction: column; }
+  .plan.featured { border: 2px solid var(--blue); box-shadow: 0 10px 30px rgba(31, 111, 235, .12); }
+  .plan .tag { align-self: flex-start; background: var(--blue); color: #fff; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; margin-bottom: 10px; }
+  .plan h3 { margin: 0; font-size: 20px; }
+  .price { font-size: 34px; font-weight: 700; margin: 10px 0 2px; }
+  .price small { font-size: 15px; font-weight: 400; color: var(--muted); }
+  .plan .for { color: var(--muted); font-size: 15px; margin: 0 0 14px; }
+  .plan ul { margin: 0; padding-left: 20px; color: var(--ink); font-size: 15px; }
+  .plan li { margin: 4px 0; }
+
+  /* Buy + download */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .box { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+  .box h3 { margin-top: 0; }
+  .box ol { margin: 0; padding-left: 20px; }
+  .box li { margin: 6px 0; }
+  .pay { margin-top: 14px; padding: 12px 14px; background: var(--bg-alt); border-radius: 10px; font-size: 15px; }
+  .req { font-size: 14px; color: var(--muted); }
+  code { background: #eef1f6; padding: 1px 6px; border-radius: 5px; font-size: 14px; }
+
+  /* FAQ */
+  details { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; margin-bottom: 10px; }
+  summary { cursor: pointer; font-weight: 600; }
+  details p { color: var(--muted); margin: 10px 0 0; }
+
+  footer { background: var(--navy); color: #a9b8d6; padding: 28px 0; font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+  @media (max-width: 860px) {
+    .hero-grid, .two { grid-template-columns: 1fr; }
+    .hero-logo { order: -1; width: 150px; }
+    .grid-3, .steps, .plans { grid-template-columns: 1fr; }
+    .nav ul { gap: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!--
+  ===================== EDIT BEFORE PUBLISHING =====================
+  Fill in the STORE values in the <script> at the bottom of this page:
+  the download link (GitHub Releases), your GCash / Maya numbers and how
+  buyers reach you. Empty values show "coming soon" instead.
+  Keep prices the same as src/SiteShield.Shared/Licensing/StoreInfo.cs.
+  ===================================================================
+-->
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top"><img src="logo.png" alt="">SiteShield</a>
+    <ul>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#plans">Plans</a></li>
+      <li><a href="#buy">How to buy</a></li>
+      <li><a href="#download">Download</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="pill">Early Access — every feature free</span>
+        <h1>Block websites on Windows.<br>Unlock them only with your passcode.</h1>
+        <p class="lead">SiteShield blocks the sites you choose in every browser, from the moment the PC starts.
+          Anyone who opens a blocked site gets a passcode prompt. Private, offline, no account needed.</p>
+        <div class="buttons">
+          <a class="btn btn-primary" id="hero-download" href="#download">Download for Windows</a>
+          <a class="btn btn-ghost" href="#plans">See plans</a>
+        </div>
+        <p class="small">Windows 10 (1903 or later) and Windows 11, 64-bit · <span class="size-text">about 24 MB</span></p>
+      </div>
+      <img class="hero-logo" src="logo.png" alt="SiteShield shield logo">
+    </div>
+  </div>
+
+  <section id="features">
+    <div class="wrap">
+      <h2>Built to stay on</h2>
+      <p class="sub">For parents, schools, computer shops and anyone who wants fewer distractions.
+        SiteShield works at the Windows level, so it isn't a browser extension that can simply be switched off.</p>
+      <div class="grid-3">
+        <div class="card"><div class="icon">1</div><h3>Every browser</h3>
+          <p>Chrome, Edge, Brave, Firefox, Opera, Vivaldi and more. Subdomains are blocked too, so m.youtube.com doesn't slip through.</p></div>
+        <div class="card"><div class="icon">2</div><h3>Starts before sign-in</h3>
+          <p>Runs as a Windows service from boot. Closing the app or declining a Windows prompt doesn't turn it off.</p></div>
+        <div class="card"><div class="icon">3</div><h3>Passcode unlock</h3>
+          <p>Opening a blocked site closes the tab and asks for the passcode. Unlock it for one visit, a few minutes, or one page.</p></div>
+        <div class="card"><div class="icon">4</div><h3>One browser at a time</h3>
+          <p>Unlocking a site in Chrome doesn't open it in other browsers. Each browser needs its own passcode.</p></div>
+        <div class="card"><div class="icon">5</div><h3>Schedules</h3>
+          <p>Block a site only during study or work hours, for example 08:00 to 17:00, every day.</p></div>
+        <div class="card"><div class="icon">6</div><h3>Private and tamper-resistant</h3>
+          <p>Nothing leaves your PC: no account, no cloud. Uninstalling and closing the tray icon need the passcode.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <h2>How it works</h2>
+      <p class="sub">Set up in a minute.</p>
+      <div class="steps">
+        <div class="step"><h3>Install and choose a passcode</h3><p>Run the setup and pick the admin passcode. Only people who know it can unlock sites or change settings.</p></div>
+        <div class="step"><h3>Add the websites to block</h3><p>Open the SiteShield dashboard and type the sites, for example <code>youtube.com</code>. Add a schedule if you want.</p></div>
+        <div class="step"><h3>Visits ask for the passcode</h3><p>Opening a blocked site shows the passcode prompt. Close the tab and it's blocked again.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="plans">
+    <div class="wrap">
+      <h2>Plans</h2>
+      <p class="sub">Prices once Early Access ends. Pro is a one-time payment, with no subscription.</p>
+      <div class="notice">Early Access: every feature is free right now. Ask for a free Early Supporter key and keep Pro features for good when paid plans start.</div>
+      <div class="plans">
+        <div class="plan">
+          <h3>Free</h3>
+          <div class="price">₱0</div>
+          <p class="for">Try SiteShield on one PC</p>
+          <ul>
+            <li>Up to 3 blocked websites</li>
+            <li>"This Visit" unlock mode</li>
+            <li>Activity log</li>
+            <li>Every browser, starts at boot</li>
+          </ul>
+        </div>
+        <div class="plan featured">
+          <span class="tag">Most popular</span>
+          <h3>Pro</h3>
+          <div class="price"><span class="price-pro">₱699</span> <small>one-time</small></div>
+          <p class="for"><span class="price-pro3">₱1,499</span> for up to 3 PCs</p>
+          <ul>
+            <li>Unlimited blocked websites</li>
+            <li>Daily block schedules</li>
+            <li>All three unlock modes</li>
+            <li>Subdomain and per-browser blocking</li>
+          </ul>
+        </div>
+        <div class="plan">
+          <h3>School / Shop</h3>
+          <div class="price"><span class="price-school">₱200</span> <small>per PC / year</small></div>
+          <p class="for">Computer labs, computer shops, internet cafés</p>
+          <ul>
+            <li>Everything in Pro on every PC</li>
+            <li>Silent install for many PCs</li>
+            <li>Priority support</li>
+            <li>Volume pricing on request</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="buy" class="alt">
+    <div class="wrap two">
+      <div class="box">
+        <h3>How to buy a license</h3>
+        <ol>
+          <li>Install SiteShield and open the dashboard.</li>
+          <li>Go to the <strong>License</strong> tab, fill in your name and email, choose a plan and click <strong>Copy License Request</strong>.</li>
+          <li>Pay with GCash or Maya (details below) and note the reference number.</li>
+          <li>Send the request and the reference number to us.</li>
+          <li>Paste the license key you receive into the License tab and click <strong>Activate</strong>.</li>
+        </ol>
+        <div class="pay" id="pay-details">Payment details are coming soon.</div>
+      </div>
+      <div class="box" id="download">
+        <h3>Download</h3>
+        <p>Free during Early Access. One file installs everything.</p>
+        <p><a class="btn btn-primary" id="download-button" href="#download">Download SiteShield for Windows</a></p>
+        <p class="req" id="download-note">The download link is coming soon.</p>
+        <p class="req"><strong>Requirements:</strong> Windows 10 version 1903 or later, or Windows 11 (64-bit). Administrator rights to install.</p>
+        <p class="req"><strong>Windows warning:</strong> because SiteShield is new, Windows may show "Windows protected your PC".
+          Click <strong>More info</strong>, then <strong>Run anyway</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <h2>Questions</h2>
+      <p class="sub">&nbsp;</p>
+      <details><summary>Is SiteShield free?</summary>
+        <p>Yes, every feature is free during Early Access. Later, the Free plan stays free (up to 3 sites) and Pro is a one-time payment. Early Supporter keys keep Pro for good.</p></details>
+      <details><summary>Which browsers does it work with?</summary>
+        <p>All of them. SiteShield blocks at the Windows level, so Chrome, Edge, Brave, Firefox, Opera, Vivaldi and others are all covered. Browsers with a built-in VPN, or set to their own "secure DNS" provider, can go around it; turn those off on managed PCs.</p></details>
+      <details><summary>Can my child or a student remove it?</summary>
+        <p>Not from a standard Windows account: stopping, changing or uninstalling SiteShield needs administrator rights, and uninstalling also asks for the SiteShield passcode. Give restricted users a standard account, not an administrator one.</p></details>
+      <details><summary>Does it collect my data?</summary>
+        <p>No. There's no account and no cloud. The blocklist, settings and activity log stay on your PC.</p></details>
+      <details><summary>What if I forget the passcode?</summary>
+        <p>A Windows administrator can reset it by deleting <code>C:\ProgramData\SiteShield\security_config.json</code>. The passcode then becomes 123456; change it right away in the dashboard.</p></details>
+      <details><summary>Why does my browser show a security warning on blocked sites?</summary>
+        <p>A blocked site is answered by SiteShield on your own PC, and the browser notices it isn't the real site. That's expected: the site stays blocked, and the SiteShield passcode prompt appears on your desktop.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year">2026</span> SiteShield</span>
+    <span id="footer-contact"></span>
+  </div>
+</footer>
+
+<script>
+  // ==================== STORE SETTINGS: EDIT THESE ====================
+  var STORE = {
+    releaseUrl: "",      // e.g. "https://github.com/your-name/siteshield-releases/releases/latest"
+    gcashNumber: "",     // e.g. "0917 123 4567"
+    gcashName: "",       // account name shown in GCash
+    mayaNumber: "",
+    email: "",           // where buyers send their license request
+    facebook: "",        // e.g. "https://facebook.com/siteshieldph"
+    proPrice: 699,
+    proThreePcPrice: 1499,
+    schoolPricePerPcYear: 200
+  };
+  // =====================================================================
+
+  function peso(n) { return "\u20B1" + n.toLocaleString("en-PH"); }
+  function text(id, value) { var el = document.getElementById(id); if (el) el.textContent = value; }
+  function setAll(cls, value) { document.querySelectorAll("." + cls).forEach(function (el) { el.textContent = value; }); }
+
+  setAll("price-pro", peso(STORE.proPrice));
+  setAll("price-pro3", peso(STORE.proThreePcPrice));
+  setAll("price-school", peso(STORE.schoolPricePerPcYear));
+  text("year", new Date().getFullYear());
+
+  if (STORE.releaseUrl) {
+    document.getElementById("download-button").href = STORE.releaseUrl;
+    document.getElementById("hero-download").href = STORE.releaseUrl;
+    text("download-note", "Opens the latest release. Run SiteShield-Setup.exe after downloading.");
+  }
+
+  var pay = [];
+  if (STORE.gcashNumber) pay.push("GCash: " + STORE.gcashNumber + (STORE.gcashName ? " (" + STORE.gcashName + ")" : ""));
+  if (STORE.mayaNumber) pay.push("Maya: " + STORE.mayaNumber);
+  var contact = [];
+  if (STORE.email) contact.push(STORE.email);
+  if (STORE.facebook) contact.push(STORE.facebook.replace(/^https?:\/\//, ""));
+  if (pay.length || contact.length) {
+    var box = document.getElementById("pay-details");
+    box.textContent = "";
+    pay.concat(contact.length ? ["Send your request to: " + contact.join(" · ")] : []).forEach(function (line) {
+      var div = document.createElement("div"); div.textContent = line; box.appendChild(div);
+    });
+  }
+  if (contact.length) text("footer-contact", "Contact: " + contact.join(" · "));
+</script>
+</body>
+</html>
