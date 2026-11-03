@@ -81,8 +81,41 @@
   .price { font-size: 34px; font-weight: 700; margin: 10px 0 2px; }
   .price small { font-size: 15px; font-weight: 400; color: var(--muted); }
   .plan .for { color: var(--muted); font-size: 15px; margin: 0 0 14px; }
-  .plan ul { margin: 0; padding-left: 20px; color: var(--ink); font-size: 15px; }
+  .plan ul { margin: 0; padding-left: 20px; color: var(--ink); font-size: 15px; flex: 1; }
   .plan li { margin: 4px 0; }
+  .plan-btn { margin-top: 20px; text-align: center; }
+  button.btn { border: 0; cursor: pointer; font: inherit; font-weight: 600; }
+  .btn-outline { background: #fff; color: var(--blue); border: 1px solid var(--blue) !important; }
+  .btn-outline:hover { background: var(--blue-soft); }
+  .btn:focus-visible { outline: 3px solid #9cc0ff; outline-offset: 2px; }
+
+  /* Order form */
+  dialog#order { border: 0; border-radius: 16px; padding: 0; width: min(560px, calc(100vw - 24px)); max-height: calc(100vh - 24px); box-shadow: 0 30px 80px rgba(11,29,63,.35); color: var(--ink); }
+  dialog#order::backdrop { background: rgba(11, 29, 63, .55); }
+  #order-form { padding: 22px 24px 20px; overflow-y: auto; max-height: calc(100vh - 24px); }
+  .dlg-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .dlg-head h3 { margin: 0; font-size: 21px; }
+  .x { background: none; border: 0; font-size: 26px; line-height: 1; cursor: pointer; color: var(--muted); padding: 4px 8px; border-radius: 8px; }
+  .x:hover { background: var(--bg-alt); }
+  .dlg-intro { color: var(--muted); margin: 6px 0 16px; font-size: 15px; }
+  .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; flex: 1; }
+  .field label { font-size: 14px; font-weight: 600; }
+  .field input, .field select, .field textarea { font: inherit; font-size: 15px; padding: 9px 11px; border: 1px solid #cdd4df; border-radius: 9px; background: #fff; color: var(--ink); width: 100%; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: 2px solid #9cc0ff; border-color: var(--blue); }
+  .row { display: flex; gap: 12px; }
+  .total { background: var(--blue-soft); color: #143d8a; border-radius: 10px; padding: 10px 14px; font-weight: 600; margin: 4px 0 14px; }
+  .pay-block { border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 12px; }
+  .pay-block .step-title { margin: 0 0 8px; font-weight: 700; }
+  .qr-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
+  .qr-row figure { margin: 0; text-align: center; font-size: 13px; color: var(--muted); }
+  .qr-row img { width: 150px; height: 150px; object-fit: contain; border: 1px solid var(--line); border-radius: 10px; background: #fff; display: block; }
+  .muted { color: var(--muted); font-size: 14px; }
+  .err { color: #b42318; font-size: 14px; font-weight: 600; min-height: 1em; margin: 4px 0 8px; }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .actions .btn { padding: 11px 16px; font-size: 15px; }
+  .done { color: #0b5e40; font-size: 14px; font-weight: 600; margin: 10px 0 0; min-height: 1em; white-space: pre-line; }
+  [hidden] { display: none !important; }
+  @media (max-width: 480px) { .row { flex-direction: column; gap: 0; } }
 
   /* Buy + download */
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -189,8 +222,8 @@
   <section id="plans">
     <div class="wrap">
       <h2>Plans</h2>
-      <p class="sub">Prices once Early Access ends. Pro is a one-time payment, with no subscription.</p>
-      <div class="notice">Early Access: every feature is free right now. Ask for a free Early Supporter key and keep Pro features for good when paid plans start.</div>
+      <p class="sub" id="plans-sub">Prices once Early Access ends. Pro is a one-time payment, with no subscription.</p>
+      <div class="notice" id="plans-notice">Early Access: every feature is free right now. Ask for a free Early Supporter key and keep Pro features for good when paid plans start.</div>
       <div class="plans">
         <div class="plan">
           <h3>Free</h3>
@@ -202,6 +235,7 @@
             <li>Activity log</li>
             <li>Every browser, starts at boot</li>
           </ul>
+          <a class="btn btn-outline plan-btn" id="btn-free" href="#download">Download free</a>
         </div>
         <div class="plan featured">
           <span class="tag">Most popular</span>
@@ -214,6 +248,7 @@
             <li>All three unlock modes</li>
             <li>Subdomain and per-browser blocking</li>
           </ul>
+          <button type="button" class="btn btn-primary plan-btn" data-plan="pro1" id="btn-pro">Get Pro</button>
         </div>
         <div class="plan">
           <h3>School / Shop</h3>
@@ -225,6 +260,7 @@
             <li>Priority support</li>
             <li>Volume pricing on request</li>
           </ul>
+          <button type="button" class="btn btn-outline plan-btn" data-plan="school" id="btn-school">Get School licenses</button>
         </div>
       </div>
     </div>
@@ -233,13 +269,13 @@
   <section id="buy" class="alt">
     <div class="wrap two">
       <div class="box">
-        <h3>How to buy a license</h3>
-        <ol>
-          <li>Install SiteShield and open the dashboard.</li>
-          <li>Go to the <strong>License</strong> tab, fill in your name and email, choose a plan and click <strong>Copy License Request</strong>.</li>
-          <li>Pay with GCash or Maya (details below) and note the reference number.</li>
-          <li>Send the request and the reference number to us.</li>
-          <li>Paste the license key you receive into the License tab and click <strong>Activate</strong>.</li>
+        <h3 id="buy-title">How to get a license</h3>
+        <ol id="buy-steps">
+          <li>Click <strong>Get Pro</strong> or <strong>Get School licenses</strong> under <a href="#plans">Plans</a> and fill in the short form.</li>
+          <li class="paid-only">Pay with GCash or Maya (scan the QR code in the form) and type the reference number.</li>
+          <li>Send the order with one click, by Messenger or email.</li>
+          <li>Your license key arrives by reply.</li>
+          <li>In SiteShield, open the <strong>License</strong> tab, paste the key and click <strong>Activate</strong>.</li>
         </ol>
         <div class="pay" id="pay-details">Payment details are coming soon.</div>
       </div>
@@ -275,6 +311,57 @@
   </section>
 </main>
 
+<!-- Order form: opened by the Pro / School buttons -->
+<dialog id="order" aria-labelledby="order-title">
+  <form id="order-form" novalidate>
+    <div class="dlg-head">
+      <h3 id="order-title">Get SiteShield Pro</h3>
+      <button type="button" class="x" id="order-close" aria-label="Close">&times;</button>
+    </div>
+    <p class="dlg-intro" id="order-intro"></p>
+
+    <div class="field"><label for="o-name">Your name</label><input id="o-name" autocomplete="name" required></div>
+    <div class="field"><label for="o-email">Email (your license key is sent here)</label><input id="o-email" type="email" autocomplete="email" required></div>
+    <div class="row">
+      <div class="field">
+        <label for="o-plan">Plan</label>
+        <select id="o-plan">
+          <option value="pro1">Pro, 1 PC</option>
+          <option value="pro3">Pro, up to 3 PCs</option>
+          <option value="school">School / Shop</option>
+        </select>
+      </div>
+      <div class="field" id="o-pcs-field">
+        <label for="o-pcs">Number of computers</label>
+        <input id="o-pcs" type="number" min="1" max="1000" value="10" inputmode="numeric">
+      </div>
+    </div>
+    <div class="total" id="o-total"></div>
+
+    <div class="pay-block" id="o-payment">
+      <p class="step-title">1. Pay</p>
+      <div class="qr-row">
+        <figure id="qr-gcash" hidden><img id="qr-gcash-img" alt="GCash QR code"><figcaption>GCash</figcaption></figure>
+        <figure id="qr-maya" hidden><img id="qr-maya-img" alt="Maya QR code"><figcaption>Maya</figcaption></figure>
+      </div>
+      <p class="muted" id="o-pay-numbers"></p>
+      <div class="field" id="o-ref-field">
+        <label for="o-ref">2. Payment reference number</label>
+        <input id="o-ref" placeholder="From your GCash or Maya receipt" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="field"><label for="o-notes">Notes (optional)</label><textarea id="o-notes" rows="2" placeholder="School name, questions..."></textarea></div>
+    <p class="err" id="o-error" role="alert"></p>
+    <div class="actions">
+      <button type="button" class="btn btn-primary" id="o-send-messenger">Send via Messenger</button>
+      <button type="button" class="btn btn-primary" id="o-send-email">Send via email</button>
+      <button type="button" class="btn btn-outline" id="o-copy">Copy order</button>
+    </div>
+    <p class="done" id="o-done" role="status"></p>
+  </form>
+</dialog>
+
 <footer>
   <div class="wrap">
     <span>© <span id="year">2026</span> SiteShield</span>
@@ -285,12 +372,18 @@
 <script>
   // ==================== STORE SETTINGS: EDIT THESE ====================
   var STORE = {
-    releaseUrl: "",      // e.g. "https://github.com/your-name/siteshield-releases/releases/latest"
+    // true = Early Access: Pro/School buttons request a FREE Early Supporter key, no payment.
+    // false = paid plans: the order form asks for payment (GCash / Maya) and a reference number.
+    earlyAccess: true,
+
+    releaseUrl: "",      // e.g. "https://github.com/your-name/siteshield/releases/latest"
     gcashNumber: "",     // e.g. "0917 123 4567"
     gcashName: "",       // account name shown in GCash
     mayaNumber: "",
-    email: "",           // where buyers send their license request
-    facebook: "",        // e.g. "https://facebook.com/siteshieldph"
+    gcashQr: "gcash-qr.png",   // put your QR image with this name in the docs folder (shown only if the file exists)
+    mayaQr: "maya-qr.png",
+    email: "",           // where orders are sent ("Send via email")
+    facebook: "",        // your Facebook page, e.g. "https://facebook.com/siteshieldph" ("Send via Messenger")
     proPrice: 699,
     proThreePcPrice: 1499,
     schoolPricePerPcYear: 200
@@ -326,6 +419,186 @@
     });
   }
   if (contact.length) text("footer-contact", "Contact: " + contact.join(" · "));
+
+  // ---------------- Plans: wording for Early Access vs paid ----------------
+  document.getElementById("btn-free").href = STORE.releaseUrl || "#download";
+  if (STORE.earlyAccess) {
+    text("btn-pro", "Get a free Early Supporter key");
+    text("btn-school", "Request free School keys");
+    text("buy-title", "How to get your free key");
+    document.querySelectorAll(".paid-only").forEach(function (el) { el.hidden = true; });
+    if (!pay.length) text("pay-details", "During Early Access the key is free: no payment needed.");
+  } else {
+    text("plans-sub", "Pro is a one-time payment, with no subscription.");
+    document.getElementById("plans-notice").hidden = true;
+    text("btn-pro", "Buy Pro");
+    text("btn-school", "Buy School licenses");
+  }
+
+  // ---------------- Order form ----------------
+  var dlg = document.getElementById("order");
+  var el = function (id) { return document.getElementById(id); };
+  var orderId = "";
+  var lastFocus = null;
+  var qrShown = { gcash: false, maya: false };
+
+  // Messenger link from the Facebook page address (facebook.com/page -> m.me/page).
+  var messengerUrl = "";
+  if (STORE.facebook) {
+    var page = STORE.facebook.replace(/^https?:\/\//, "").replace(/\/+$/, "").split("/").pop();
+    messengerUrl = /m\.me/.test(STORE.facebook) ? STORE.facebook : "https://m.me/" + page;
+  }
+  el("o-send-messenger").hidden = !messengerUrl;
+  el("o-send-email").hidden = !STORE.email;
+
+  // QR codes appear only if the image files exist.
+  function loadQr(kind, src) {
+    if (!src) return;
+    var img = el("qr-" + kind + "-img");
+    img.onload = function () { qrShown[kind] = true; el("qr-" + kind).hidden = false; updatePayment(); };
+    img.onerror = function () { el("qr-" + kind).hidden = true; };
+    img.src = src;
+  }
+  loadQr("gcash", STORE.gcashQr);
+  loadQr("maya", STORE.mayaQr);
+
+  function paymentConfigured() {
+    return !!(STORE.gcashNumber || STORE.mayaNumber || qrShown.gcash || qrShown.maya);
+  }
+
+  function planInfo() {
+    var plan = el("o-plan").value;
+    var pcs = Math.max(1, Math.min(1000, parseInt(el("o-pcs").value, 10) || 0));
+    if (plan === "pro3") return { label: "Pro (up to 3 PCs)", pcs: 3, price: STORE.proThreePcPrice, yearly: false };
+    if (plan === "school") return { label: "School / Shop", pcs: pcs, price: STORE.schoolPricePerPcYear * pcs, yearly: true };
+    return { label: "Pro (1 PC)", pcs: 1, price: STORE.proPrice, yearly: false };
+  }
+
+  function updateTotal() {
+    var info = planInfo();
+    el("o-pcs-field").hidden = el("o-plan").value !== "school";
+    el("o-total").textContent = STORE.earlyAccess
+      ? "Free during Early Access (regular price " + peso(info.price) + (info.yearly ? " per year" : "") + ")"
+      : "Total: " + peso(info.price) + (info.yearly ? " per year (" + info.pcs + " PCs)" : " one-time");
+  }
+
+  function updatePayment() {
+    el("o-payment").hidden = STORE.earlyAccess;
+    var lines = [];
+    if (STORE.gcashNumber) lines.push("GCash: " + STORE.gcashNumber + (STORE.gcashName ? " (" + STORE.gcashName + ")" : ""));
+    if (STORE.mayaNumber) lines.push("Maya: " + STORE.mayaNumber);
+    el("o-pay-numbers").textContent = lines.length
+      ? lines.join("   ·   ") + ". Pay the total above, then type the reference number."
+      : (qrShown.gcash || qrShown.maya)
+        ? "Scan a QR code, pay the total above, then type the reference number."
+        : "Payment details are coming soon. Send your order and we'll reply with them.";
+    el("o-ref-field").hidden = !paymentConfigured();
+  }
+
+  function newOrderId() {
+    var alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789", bytes = new Uint8Array(6), id = "SSO-";
+    (window.crypto || window.msCrypto).getRandomValues(bytes);
+    for (var i = 0; i < bytes.length; i++) id += alphabet[bytes[i] % alphabet.length];
+    return id;
+  }
+
+  function openOrder(plan) {
+    lastFocus = document.activeElement;
+    orderId = newOrderId();
+    el("o-plan").value = plan;
+    var school = plan === "school";
+    el("order-title").textContent = STORE.earlyAccess
+      ? (school ? "Request free School keys" : "Get a free Early Supporter key")
+      : (school ? "Buy School licenses" : "Buy SiteShield Pro");
+    el("order-intro").textContent = STORE.earlyAccess
+      ? "SiteShield is free during Early Access. Send this request and we'll email you a free Early Supporter key, which keeps Pro features for good."
+      : "Pay with GCash or Maya, then send your order. Your license key arrives by email.";
+    el("o-error").textContent = "";
+    el("o-done").textContent = (!messengerUrl && !STORE.email)
+      ? "Ordering opens soon. You can copy your order now and send it once contact details are posted."
+      : "";
+    updateTotal();
+    updatePayment();
+    if (typeof dlg.showModal === "function") dlg.showModal(); else dlg.setAttribute("open", "");
+    el("o-name").focus();
+  }
+
+  function closeOrder() {
+    if (typeof dlg.close === "function") dlg.close(); else dlg.removeAttribute("open");
+  }
+  dlg.addEventListener("close", function () { if (lastFocus) lastFocus.focus(); });
+  dlg.addEventListener("click", function (e) { if (e.target === dlg) closeOrder(); }); // click outside the form
+  el("order-close").addEventListener("click", closeOrder);
+  el("o-plan").addEventListener("change", updateTotal);
+  el("o-pcs").addEventListener("input", updateTotal);
+  document.querySelectorAll("[data-plan]").forEach(function (b) {
+    b.addEventListener("click", function () { openOrder(b.getAttribute("data-plan")); });
+  });
+
+  // Returns true if the form is complete; otherwise shows what's missing.
+  function validate() {
+    var problem = null, field = null;
+    var email = el("o-email").value.trim();
+    if (!el("o-name").value.trim()) { problem = "Please enter your name."; field = "o-name"; }
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { problem = "Please enter a valid email address, so we can send your key."; field = "o-email"; }
+    else if (el("o-plan").value === "school" && !(parseInt(el("o-pcs").value, 10) >= 1)) { problem = "Please enter the number of computers."; field = "o-pcs"; }
+    else if (!STORE.earlyAccess && paymentConfigured() && !el("o-ref").value.trim()) { problem = "Please pay first and enter the payment reference number."; field = "o-ref"; }
+    el("o-error").textContent = problem || "";
+    if (field) el(field).focus();
+    return !problem;
+  }
+
+  function orderText() {
+    var info = planInfo();
+    var lines = [
+      "SiteShield order " + orderId,
+      "Plan: " + info.label,
+      "Computers: " + info.pcs,
+      STORE.earlyAccess
+        ? "Price: free Early Supporter key (Early Access)"
+        : "Amount: " + peso(info.price) + (info.yearly ? " per year" : " one-time"),
+      "Name: " + el("o-name").value.trim(),
+      "Email: " + el("o-email").value.trim()
+    ];
+    if (!STORE.earlyAccess) lines.push("Payment reference: " + (el("o-ref").value.trim() || "(not paid yet)"));
+    if (el("o-notes").value.trim()) lines.push("Notes: " + el("o-notes").value.trim());
+    return lines.join("\n");
+  }
+
+  function copyText(value) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(value);
+    return new Promise(function (resolve, reject) {
+      var t = document.createElement("textarea");
+      t.value = value; t.setAttribute("readonly", ""); t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select();
+      var ok = false; try { ok = document.execCommand("copy"); } catch (e) { }
+      document.body.removeChild(t);
+      ok ? resolve() : reject();
+    });
+  }
+
+  el("o-copy").addEventListener("click", function () {
+    if (!validate()) return;
+    copyText(orderText()).then(
+      function () { el("o-done").textContent = "Order " + orderId + " copied. Paste it into a message or email to us."; },
+      function () { el("o-done").textContent = "Couldn't copy automatically. Select and copy this:\n" + orderText(); });
+  });
+
+  el("o-send-email").addEventListener("click", function () {
+    if (!validate()) return;
+    window.location.href = "mailto:" + STORE.email +
+      "?subject=" + encodeURIComponent("SiteShield order " + orderId) +
+      "&body=" + encodeURIComponent(orderText());
+    el("o-done").textContent = "Your email app should open with the order filled in. If it doesn't, use Copy order and email it to " + STORE.email + ".";
+  });
+
+  el("o-send-messenger").addEventListener("click", function () {
+    if (!validate()) return;
+    var message = orderText();
+    copyText(message).catch(function () { });
+    window.open(messengerUrl, "_blank", "noopener");
+    el("o-done").textContent = "Your order was copied. Paste it into the Messenger chat that just opened.";
+  });
 </script>
 </body>
 </html>
