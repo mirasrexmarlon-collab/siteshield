@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SiteShield — Website blocking with a passcode, for Windows</title>
-<meta name="description" content="SiteShield blocks websites on Windows in every browser, from the moment the PC starts. Blocked sites open only with your passcode. Private, offline, free during Early Access.">
+<meta name="description" content="SiteShield blocks websites on Windows in every browser, from the moment the PC starts. Blocked sites open only with your passcode. Private and offline. Free plan available; Pro is a one-time payment.">
 <link rel="icon" href="favicon.png">
 <style>
   :root {
@@ -148,7 +148,7 @@
 <!--
   ===================== EDIT BEFORE PUBLISHING =====================
   Fill in the STORE values in the <script> at the bottom of this page:
-  the download link (GitHub Releases), your GCash / Maya numbers and how
+  the download link (GitHub Releases), your GCash number and PayPal.me link, and how
   buyers reach you. Empty values show "coming soon" instead.
   Keep prices the same as src/SiteShield.Shared/Licensing/StoreInfo.cs.
   ===================================================================
@@ -171,7 +171,7 @@
   <div class="hero">
     <div class="wrap hero-grid">
       <div>
-        <span class="pill">Early Access — every feature free</span>
+        <span class="pill">Free plan · Pro from ₱699, one-time</span>
         <h1>Block websites on Windows.<br>Unlock them only with your passcode.</h1>
         <p class="lead">SiteShield blocks the sites you choose in every browser, from the moment the PC starts.
           Anyone who opens a blocked site gets a passcode prompt. Private, offline, no account needed.</p>
@@ -222,7 +222,7 @@
   <section id="plans">
     <div class="wrap">
       <h2>Plans</h2>
-      <p class="sub" id="plans-sub">Prices once Early Access ends. Pro is a one-time payment, with no subscription.</p>
+      <p class="sub" id="plans-sub">Start free. Pro is a one-time payment, with no subscription.</p>
       <div class="notice" id="plans-notice">Early Access: every feature is free right now. Ask for a free Early Supporter key and keep Pro features for good when paid plans start.</div>
       <div class="plans">
         <div class="plan">
@@ -272,16 +272,16 @@
         <h3 id="buy-title">How to get a license</h3>
         <ol id="buy-steps">
           <li>Click <strong>Get Pro</strong> or <strong>Get School licenses</strong> under <a href="#plans">Plans</a> and fill in the short form.</li>
-          <li class="paid-only">Pay with GCash or Maya (scan the QR code in the form) and type the reference number.</li>
+          <li class="paid-only">Pay with GCash (scan the QR code in the form) or PayPal, and type the reference number.</li>
           <li>Send the order with one click, by Messenger or email.</li>
-          <li>Your license key arrives by reply.</li>
-          <li>In SiteShield, open the <strong>License</strong> tab, paste the key and click <strong>Activate</strong>.</li>
+          <li>Once the payment is confirmed, your activation code and license key arrive by reply.</li>
+          <li>In SiteShield, open the <strong>License</strong> tab, type the activation code (or paste the key) and click <strong>Activate</strong>.</li>
         </ol>
         <div class="pay" id="pay-details">Payment details are coming soon.</div>
       </div>
       <div class="box" id="download">
         <h3>Download</h3>
-        <p>Free during Early Access. One file installs everything.</p>
+        <p>Free to download and use on the Free plan. One file installs everything; activate Pro any time from the License tab.</p>
         <p><a class="btn btn-primary" id="download-button" href="https://github.com/mirasrexmarlon-collab/siteshield/releases/latest">Download SiteShield for Windows</a></p>
         <p class="req" id="download-note"></p>
         <p class="req"><strong>Requirements:</strong> Windows 10 version 1903 or later, or Windows 11 (64-bit). Administrator rights to install.</p>
@@ -296,7 +296,9 @@
       <h2>Questions</h2>
       <p class="sub">&nbsp;</p>
       <details><summary>Is SiteShield free?</summary>
-        <p>Yes, every feature is free during Early Access. Later, the Free plan stays free (up to 3 sites) and Pro is a one-time payment. Early Supporter keys keep Pro for good.</p></details>
+        <p>The Free plan is free for good: up to 3 blocked websites with the "This Visit" unlock mode. Pro (one-time payment) adds unlimited websites, daily schedules and all three unlock modes. Early Supporter keys from Early Access keep Pro features.</p></details>
+      <details><summary>How do I pay, and how fast do I get my license?</summary>
+        <p>Pay with GCash or PayPal from the order form, then send the order with your payment reference number. Each payment is checked by hand, and your activation code and license key are sent by email, usually within a day.</p></details>
       <details><summary>Which browsers does it work with?</summary>
         <p>All of them. SiteShield blocks at the Windows level, so Chrome, Edge, Brave, Firefox, Opera, Vivaldi and others are all covered. Browsers with a built-in VPN, or set to their own "secure DNS" provider, can go around it; turn those off on managed PCs.</p></details>
       <details><summary>Can my child or a student remove it?</summary>
@@ -342,12 +344,12 @@
       <p class="step-title">1. Pay</p>
       <div class="qr-row">
         <figure id="qr-gcash" hidden><img id="qr-gcash-img" alt="GCash QR code"><figcaption>GCash</figcaption></figure>
-        <figure id="qr-maya" hidden><img id="qr-maya-img" alt="Maya QR code"><figcaption>Maya</figcaption></figure>
       </div>
       <p class="muted" id="o-pay-numbers"></p>
+      <p id="o-paypal-row" hidden><a class="btn btn-outline" id="o-paypal" target="_blank" rel="noopener">Pay with PayPal</a></p>
       <div class="field" id="o-ref-field">
         <label for="o-ref">2. Payment reference number</label>
-        <input id="o-ref" placeholder="From your GCash or Maya receipt" autocomplete="off">
+        <input id="o-ref" placeholder="GCash reference no. or PayPal transaction ID" autocomplete="off">
       </div>
     </div>
 
@@ -373,17 +375,16 @@
   // ==================== STORE SETTINGS: EDIT THESE ====================
   var STORE = {
     // true = Early Access: Pro/School buttons request a FREE Early Supporter key, no payment.
-    // false = paid plans: the order form asks for payment (GCash / Maya) and a reference number.
-    earlyAccess: true,
+    // false = paid plans: the order form asks for payment (GCash / PayPal) and a reference number.
+    earlyAccess: false,
 
     releaseUrl: "https://github.com/mirasrexmarlon-collab/siteshield/releases/latest",      // e.g. "https://github.com/your-name/siteshield/releases/latest"
     gcashNumber: "09505293828",     // e.g. "0917 123 4567"
     gcashName: "Rex Marlon Miras",       // account name shown in GCash
-    mayaNumber: "09505293828",
-    gcashQr: "gcash-qr.png",   // put your QR image with this name in the docs folder (shown only if the file exists)
-    mayaQr: "maya-qr.png",
+    gcashQr: "gcash-qr.jpg",   // put your QR image with this name in the docs folder (shown only if the file exists)
+    paypalMe: "https://www.paypal.com/paypalme/RexMarlon",        // your PayPal.me link, e.g. "https://paypal.me/yourname" (the button fills in the amount)
     email: "mirasrexmarlon@gmail.com",           // where orders are sent ("Send via email")
-    facebook: "",        // your Facebook page, e.g. "https://facebook.com/siteshieldph" ("Send via Messenger")
+    facebook: "https://www.facebook.com/jason.roy.tanglao.2024",        // your Facebook page, e.g. "https://facebook.com/siteshieldph" ("Send via Messenger")
     proPrice: 699,
     proThreePcPrice: 1499,
     schoolPricePerPcYear: 200
@@ -407,7 +408,11 @@
 
   var pay = [];
   if (STORE.gcashNumber) pay.push("GCash: " + STORE.gcashNumber + (STORE.gcashName ? " (" + STORE.gcashName + ")" : ""));
-  if (STORE.mayaNumber) pay.push("Maya: " + STORE.mayaNumber);
+  // PayPal.me link without "https://" and trailing slashes, e.g. "paypal.me/yourname".
+  var paypalLink = (STORE.paypalMe || "").trim().replace(/^https?:\/\//, "").replace(/^www\./, "").replace(/\/+$/, "")
+    .replace(/^paypal\.com\/paypalme\//i, "paypal.me/");  // the long form of the same link
+  if (paypalLink && !/^paypal\.me\//i.test(paypalLink)) paypalLink = "paypal.me/" + paypalLink; // just the name was given
+  if (paypalLink) pay.push("PayPal: " + paypalLink);
   var contact = [];
   if (STORE.email) contact.push(STORE.email);
   if (STORE.facebook) contact.push(STORE.facebook.replace(/^https?:\/\//, ""));
@@ -440,7 +445,7 @@
   var el = function (id) { return document.getElementById(id); };
   var orderId = "";
   var lastFocus = null;
-  var qrShown = { gcash: false, maya: false };
+  var qrShown = { gcash: false };
 
   // Messenger link from the Facebook page address (facebook.com/page -> m.me/page).
   var messengerUrl = "";
@@ -460,10 +465,9 @@
     img.src = src;
   }
   loadQr("gcash", STORE.gcashQr);
-  loadQr("maya", STORE.mayaQr);
 
   function paymentConfigured() {
-    return !!(STORE.gcashNumber || STORE.mayaNumber || qrShown.gcash || qrShown.maya);
+    return !!(STORE.gcashNumber || qrShown.gcash || paypalLink);
   }
 
   function planInfo() {
@@ -480,18 +484,24 @@
     el("o-total").textContent = STORE.earlyAccess
       ? "Free during Early Access (regular price " + peso(info.price) + (info.yearly ? " per year" : "") + ")"
       : "Total: " + peso(info.price) + (info.yearly ? " per year (" + info.pcs + " PCs)" : " one-time");
+    // PayPal.me accepts the amount and currency in the link: paypal.me/name/699PHP
+    if (paypalLink) {
+      el("o-paypal").href = "https://" + paypalLink + "/" + info.price + "PHP";
+      el("o-paypal").textContent = "Pay " + peso(info.price) + " with PayPal";
+    }
   }
 
   function updatePayment() {
     el("o-payment").hidden = STORE.earlyAccess;
-    var lines = [];
-    if (STORE.gcashNumber) lines.push("GCash: " + STORE.gcashNumber + (STORE.gcashName ? " (" + STORE.gcashName + ")" : ""));
-    if (STORE.mayaNumber) lines.push("Maya: " + STORE.mayaNumber);
-    el("o-pay-numbers").textContent = lines.length
-      ? lines.join("   ·   ") + ". Pay the total above, then type the reference number."
-      : (qrShown.gcash || qrShown.maya)
-        ? "Scan a QR code, pay the total above, then type the reference number."
-        : "Payment details are coming soon. Send your order and we'll reply with them.";
+    el("o-paypal-row").hidden = !paypalLink;
+    var gcash = STORE.gcashNumber ? "GCash: " + STORE.gcashNumber + (STORE.gcashName ? " (" + STORE.gcashName + ")" : "") : "";
+    el("o-pay-numbers").textContent = gcash
+      ? gcash + (paypalLink ? ". Or pay with PayPal below." : ".") + " Then type the reference number."
+      : qrShown.gcash
+        ? "Scan the GCash QR code" + (paypalLink ? " or pay with PayPal below" : "") + ", then type the reference number."
+        : paypalLink
+          ? "Pay with PayPal below, then type the transaction ID from your receipt."
+          : "Payment details are coming soon. Send your order and we'll reply with them.";
     el("o-ref-field").hidden = !paymentConfigured();
   }
 
@@ -512,7 +522,7 @@
       : (school ? "Buy School licenses" : "Buy SiteShield Pro");
     el("order-intro").textContent = STORE.earlyAccess
       ? "SiteShield is free during Early Access. Send this request and we'll email you a free Early Supporter key, which keeps Pro features for good."
-      : "Pay with GCash or Maya, then send your order. Your license key arrives by email.";
+      : "Pay with GCash or PayPal, then send your order. Your license key arrives by email.";
     el("o-error").textContent = "";
     el("o-done").textContent = (!messengerUrl && !STORE.email)
       ? "Ordering opens soon. You can copy your order now and send it once contact details are posted."
