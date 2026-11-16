@@ -1,0 +1,7 @@
+{
+  "format": "siteshield-update-1",
+  "version": "1.4.0",
+  "notes": "New: Pro Monthly plan (P149 per month, 1 PC).\nNew: SiteShield tells you when an update is out and installs it for you.\nNew: renewal reminders before a license ends.",
+  "manifest": "eyJ2ZXJzaW9uIjoiMS40LjAiLCJ1cmwiOiJodHRwczovL2dpdGh1Yi5jb20vbWlyYXNyZXhtYXJsb24tY29sbGFiL3NpdGVzaGllbGQvcmVsZWFzZXMvZG93bmxvYWQvdjEuNC4wL1NpdGVTaGllbGQtU2V0dXAtMS40LjAuZXhlIiwic2hhMjU2IjoiNDJkNjlkYTk1ZjRhNmVkYmMwOWEwNmQ2NDRhOWRiYzQzYThiNzk0MmNkZTZiMjRjOTVjYWZjY2M4ZjZiMWVkMCIsInNpemUiOjI1Mzg3ODc0LCJub3RlcyI6Ik5ldzogUHJvIE1vbnRobHkgcGxhbiAoUDE0OSBwZXIgbW9udGgsIDEgUEMpLlxuTmV3OiBTaXRlU2hpZWxkIHRlbGxzIHlvdSB3aGVuIGFuIHVwZGF0ZSBpcyBvdXQgYW5kIGluc3RhbGxzIGl0IGZvciB5b3UuXG5OZXc6IHJlbmV3YWwgcmVtaW5kZXJzIGJlZm9yZSBhIGxpY2Vuc2UgZW5kcy4iLCJwdWJsaXNoZWQiOiIyMDI2LTExLTE2VDA1OjI1OjA5LjA5NjMzODNaIn0",
+  "signature": "1ouiPZP2hhzgFuqF-rSmtzBxJ-btFh25uS0ENA8_xg-l7K1nHecflLQbNUP9HL5lRpBZ48HP6FI40exkLynrow"
+}
